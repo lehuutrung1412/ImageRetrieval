@@ -8,7 +8,8 @@ import os
 
 class FeatureExtractor:
     def __init__(self):
-        self.model = VGG16(weights='imagenet')
+        base_model = VGG16(weights='imagenet')
+        self.model = Model(inputs=base_model.input, outputs=base_model.get_layer('fc1').output)
 
     def extract(self, img):
         """
@@ -23,12 +24,18 @@ class FeatureExtractor:
         return feature / np.linalg.norm(feature)  # Normalize
 
     def load(self, path="../app/static/data/images/"):
+        from dimension_reduction import perform_pca_on_single_vector
         features = []
         names = []
         for img_path in sorted(glob.glob(path + "*.jpg")):
-            feature = self.extract(img=image.load_img(img_path))
+            try:
+                feature = self.extract(img=image.load_img(img_path))
+            except:
+                continue
+            # PCA
+            feature = perform_pca_on_single_vector(feature, 5, 512)
             img_name = os.path.split(img_path)[1]
             features.append(feature)
             names.append(img_name)
         features = np.array(features)
-        return features
+        return features, names
