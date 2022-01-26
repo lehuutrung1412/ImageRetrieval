@@ -1,0 +1,138 @@
+:root {
+    --font-body: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif;
+}
+
+body {
+    font-family: var(--font-body);
+}
+
+h1 {
+    color: #78839a;
+    margin-top: 36px;
+    font-weight: 800;
+}
+
+h6 {
+    text-align: center;
+    color: rgba(25,90,156,0.7);
+}
+
+.dropArea {
+    border-radius: 16px;
+    background: rgba(255,255,255,0.9);
+    height: 180px;
+    margin-top: 32px;
+    box-shadow: 0 5px 5px 5px rgba(141,179,215,0.3);
+    text-align: center;
+    padding: 16px;
+}
+
+.dropArea-child {
+    border-style: dashed;
+    border-radius: 8px;
+    padding: 40px 20px;
+    border-color: #acb3be;
+    border-width: medium;
+    height: 100%;
+    width: 100%;
+}
+
+.dropArea-child.active {
+    border-color: #327ecf;
+}
+
+.cloud {
+    font-size: 32px;
+    text-align: center;
+    color: #8bbef1;
+}
+
+#detail {
+    font-weight: 800;
+    font-size: 1vw;
+    color: #78839a;
+    display: block;
+}
+
+.button {
+    text-align: center;
+    margin-left: 0;
+    background: rgb(232,241,247);
+    height: 45px;
+    width: 100px;
+    border-radius: 10px;
+    color: rgb(150,188,219);
+    font-family: var(--font-body);
+    font-weight: bold;
+    font-size: 18px;
+    display: none;
+}
+
+.imgBox {
+    /*height: 500px;*/
+    background: rgba(255,255,255,0.9);
+    margin-top: 32px;
+    border-radius: 16px;
+    box-shadow: 0 5px 5px 5px rgba(141,179,215,0.3);
+}
+
+.imgBox h6 {
+    font-weight: bold;
+}
+
+#imgChosen {
+    /*height: 100%;*/
+    width: 100%;
+    /*height: 400px;*/
+}
+
+.copyright {
+    font-family: var(--font-body);
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 45px;
+    color: #78839a;
+}
+
+.copyright a {
+    color: rgba(25,90,156,0.7);
+}
+
+.buttonArea {
+    margin-top: 32px;
+}
+
+#btn-submit {
+    margin-right: 32px;
+}
+
+.img-result-row {
+    margin-top: 32px;
+}
+
+#time-span {
+    margin-top: 32px;
+}
+
+.img-result {
+    margin-top: 8px;
+}
+
+#loading-screen {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    background-color: #e4f0f0;
+}
+
+#loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
