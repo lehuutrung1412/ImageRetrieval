@@ -8,9 +8,10 @@ from PIL import Image
 from sklearn.neighbors import KDTree
 from lshashpy3 import LSHash
 import argparse
+import faiss
 
 ap = argparse.ArgumentParser()
-ap.add_argument("--large", choices=['kdtree', 'lsh'], required=False, help="Large scale method")
+ap.add_argument("--large", choices=['kdtree', 'lsh', 'faiss'], required=False, help="Large scale method")
 ap.add_argument("--top", required=True, help="Number of ranked lists element")
 args = vars(ap.parse_args())
 
@@ -28,6 +29,15 @@ if args['large'] is not None:
         lsh = LSHash(8, 2560)
         for i in range(len(features)):
             lsh.index(features[i], extra_data=names[i])
+    elif args['large'] == 'faiss':
+        # Large scale with faiss
+        index_flat = faiss.IndexFlatL2(features.shape[1])
+        if faiss.get_num_gpus() > 0:
+            # Using GPU
+            res = faiss.StandardGpuResources()
+            index_flat = faiss.index_cpu_to_gpu(res, 0, index_flat)
+        index_flat.train(features)
+        index_flat.add(features)
 
 
 def load_list(file_name: str):
@@ -71,6 +81,13 @@ def get_ranked_lists(file_name):
             # Large scale search using LSH
             lsh_search = lsh.query(query, num_results=num)
             results = [str(name, 'utf-8').split(".")[0] for ((vec, name), dist) in lsh_search]
+        elif args['large'] == 'faiss':
+            # Large scale search using faiss
+            query = np.expand_dims(query, axis=0)
+            dists, ids = index_flat.search(query, 30)
+            dists = np.squeeze(dists, axis=0)
+            ids = np.squeeze(ids, axis=0)
+            results = [str(names[index_img], 'utf-8').split(".")[0] for index_img in ids]
     else:
         # Normal calculate euclid distance
         dists = np.linalg.norm(features - query, axis=1)
