@@ -20,7 +20,11 @@ dropArea.onclick = ()=>{
 
 input.addEventListener("change", function (){
     file = this.files[0];
-    upload();
+    if (!checkImageFile(file)){
+        alert("Vui lòng tải lên file ảnh");
+        return;
+    }
+    loadImage();
 });
 
 dropArea.addEventListener("dragover", (event) => {
