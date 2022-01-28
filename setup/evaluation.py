@@ -19,14 +19,15 @@ img_path = '../app/static/data/images/'
 gt_path = '../app/static/data/gt_files/'
 
 extractor = FeatureExtractor()
-features, names = Index(name='../app/static/data/features_pca.h5').get()
+features, names = Index(name='../app/static/data/features_no_pca.h5').get()
 if args['large'] is not None:
     if args['large'] == 'kdtree':
         # Large scale with kd-tree
+        print(features.shape)
         features = KDTree(features)
     elif args['large'] == 'lsh':
         # Large scale with LSH
-        lsh = LSHash(8, 2560)
+        lsh = LSHash(8, len(features.shape[1]))
         for i in range(len(features)):
             lsh.index(features[i], extra_data=names[i])
     elif args['large'] == 'faiss':
@@ -54,6 +55,8 @@ def compute_ap(pos: List[str], amb: List[str], ranked_list: List[str]):
         if e in pos:
             num_relevant += 1
             ap += num_relevant / (i+1)
+    if num_relevant == 0:
+        return 0
     return ap / num_relevant
 
 
@@ -62,12 +65,15 @@ def read_query(query_name):
 
 
 def get_ranked_lists(file_name):
+    file_data = load_list("%s_query.txt" % file_name)[0].split(' ')
+    file_name = file_data[0]
     num = int(args['top'])
     img = Image.open(os.path.join(img_path, file_name + '.jpg'))
+    img = img.crop((int(file_data[1]), int(file_data[2]), int(file_data[3]), int(file_data[4])))
 
     query = extractor.extract(img)
     # PCA
-    query = perform_pca_on_single_vector(query, 5, 512)
+    # query = perform_pca_on_single_vector(query, 5, 512)
 
     if args['large'] is not None:
         if args['large'] == 'kdtree':
@@ -105,7 +111,7 @@ def compute_map():
         for i in range(1, 6):
             file_name = query + '_' + str(i)
             print(file_name, end=" ")
-            ranked_lists = get_ranked_lists(read_query(file_name))
+            ranked_lists = get_ranked_lists(file_name)
             pos_set = list(set(load_list("%s_good.txt" % file_name) + load_list("%s_ok.txt" % file_name)))
             junk_set = load_list("%s_junk.txt" % file_name)
             ap = compute_ap(pos_set, junk_set, ranked_lists)
