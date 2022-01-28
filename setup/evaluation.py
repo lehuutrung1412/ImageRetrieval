@@ -13,13 +13,20 @@ import faiss
 ap = argparse.ArgumentParser()
 ap.add_argument("--large", choices=['kdtree', 'lsh', 'faiss'], required=False, help="Large scale method")
 ap.add_argument("--top", required=True, help="Number of ranked lists element")
+ap.add_argument("--feature", required=False, help="Features indexing file path")
+ap.add_argument("--pca", required=False, help="Enable pca")
 args = vars(ap.parse_args())
 
 img_path = '../app/static/data/images/'
 gt_path = '../app/static/data/gt_files/'
 
 extractor = FeatureExtractor()
-features, names = Index(name='../app/static/data/features_no_pca.h5').get()
+index_path = '../app/static/data/features_no_pca.h5'
+if args['pca'] is not None:
+    index_path = '../app/static/data/features_pca.h5'
+if args['feature'] is not None:
+    index_path = args['feature']
+features, names = Index(name=index_path).get()
 if args['large'] is not None:
     if args['large'] == 'kdtree':
         # Large scale with kd-tree
@@ -73,7 +80,8 @@ def get_ranked_lists(file_name):
 
     query = extractor.extract(img)
     # PCA
-    # query = perform_pca_on_single_vector(query, 5, 512)
+    if args['pca'] is not None:
+        query = perform_pca_on_single_vector(query, 5, 512)
 
     if args['large'] is not None:
         if args['large'] == 'kdtree':

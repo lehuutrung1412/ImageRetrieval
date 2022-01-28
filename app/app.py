@@ -16,13 +16,20 @@ from setup.dimension_reduction import perform_pca_on_single_vector
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--large", choices=['kdtree', 'lsh', 'faiss'], required=False, help="Large scale method")
+ap.add_argument("--feature", required=False, help="Features indexing file path")
+ap.add_argument("--pca", required=False, help="Enable pca")
 args = vars(ap.parse_args())
 
 DATA_PATH = "/static/data/images/"
 app = Flask(__name__)
 run_with_ngrok(app)
 extractor = FeatureExtractor()
-features, names = Index(name='./static/data/features_pca.h5').get()
+index_path = './static/data/features_no_pca.h5'
+if args['pca'] is not None:
+    index_path = './static/data/features_pca.h5'
+if args['feature'] is not None:
+    index_path = args['feature']
+features, names = Index(name=index_path).get()
 
 if args['large'] is not None:
     if args['large'] == 'kdtree':
@@ -30,7 +37,7 @@ if args['large'] is not None:
         features = KDTree(features)
     elif args['large'] == 'lsh':
         # Large scale with LSH
-        lsh = LSHash(8, 2560)
+        lsh = LSHash(8, features.shape[1])
         for i in range(len(features)):
             lsh.index(features[i], extra_data=names[i])
     elif args['large'] == 'faiss':
@@ -58,7 +65,8 @@ def index():
 
             query = extractor.extract(img)
             # PCA
-            query = perform_pca_on_single_vector(query, 5, 512)
+            if args['pca'] is not None:
+                query = perform_pca_on_single_vector(query, 5, 512)
 
             if args['large'] is not None:
                 if args['large'] == 'kdtree':

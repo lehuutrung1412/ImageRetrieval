@@ -33,7 +33,7 @@ class FeatureExtractor:
             except:
                 continue
             # PCA
-            feature = perform_pca_on_single_vector(feature, 5, 512)
+            # feature = perform_pca_on_single_vector(feature, 5, 512)
             img_name = os.path.split(img_path)[1]
             features.append(feature)
             names.append(img_name)
