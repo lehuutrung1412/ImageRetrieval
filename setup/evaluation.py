@@ -30,11 +30,10 @@ features, names = Index(name=index_path).get()
 if args['large'] is not None:
     if args['large'] == 'kdtree':
         # Large scale with kd-tree
-        print(features.shape)
         features = KDTree(features)
     elif args['large'] == 'lsh':
         # Large scale with LSH
-        lsh = LSHash(8, len(features.shape[1]))
+        lsh = LSHash(8, features.shape[1], 2)
         for i in range(len(features)):
             lsh.index(features[i], extra_data=names[i])
     elif args['large'] == 'faiss':
@@ -76,7 +75,7 @@ def get_ranked_lists(file_name):
     file_name = file_data[0]
     num = int(args['top'])
     img = Image.open(os.path.join(img_path, file_name + '.jpg'))
-    img = img.crop((int(file_data[1]), int(file_data[2]), int(file_data[3]), int(file_data[4])))
+    img = img.crop((int(float(file_data[1])), int(float(file_data[2])), int(float(file_data[3])), int(float(file_data[4]))))
 
     query = extractor.extract(img)
     # PCA

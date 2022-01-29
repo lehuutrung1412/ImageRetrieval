@@ -37,7 +37,7 @@ if args['large'] is not None:
         features = KDTree(features)
     elif args['large'] == 'lsh':
         # Large scale with LSH
-        lsh = LSHash(8, features.shape[1])
+        lsh = LSHash(8, features.shape[1], 2)
         for i in range(len(features)):
             lsh.index(features[i], extra_data=names[i])
     elif args['large'] == 'faiss':
