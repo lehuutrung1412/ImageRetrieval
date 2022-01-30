@@ -47,4 +47,4 @@ zipp==3.7.0
 flask-ngrok==0.0.25
 lshashpy3==0.0.8
 pyngrok==5.1.0
-
+faiss-gpu==1.7.2
