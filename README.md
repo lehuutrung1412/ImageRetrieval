@@ -3,6 +3,8 @@ Build content-based image retrieval system using deep learning, applied some lar
 
 ## Demo
 
+<img src="https://github.com/lehuutrung1412/ImageRetrieval/blob/main/docs/image_retrieval.gif" alt="demo" width="100%"/>
+
 ## Usage
 
 ```
