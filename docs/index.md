@@ -1,37 +1,65 @@
-## Welcome to GitHub Pages
+# Content-based Image Retrieval System
+Build content-based image retrieval system using deep learning, applied some large scale similarity search technicals like Kdtree, LSH, Faiss.
 
-You can use the [editor on GitHub](https://github.com/lehuutrung1412/ImageRetrieval/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
+## Demo
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Usage
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```
+Usage:  python app/app.py [--large] [--feature] [--pca]
+        Run demo app.
+Options:
+  --large=['kdtree', 'lsh', 'faiss']    Large scale method
+  --feature=[PATH]                      Features indexing file path
+  --pca=[INT]                           Enable pca
 ```
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+```
+Usage:  python setup/export_feature.py [-path]
+        Export feature indexing file to path.
+Options:
+  -path=[PATH]    Path to save features file
+```
 
-### Jekyll Themes
+```
+Usage:  python setup/evaluation.py [--large] [--feature] [--pca] [--top]
+        Run system evaluation.
+Options:
+  --large=['kdtree', 'lsh', 'faiss']    Large scale method
+  --feature=[PATH]                      Features indexing file path
+  --pca=[INT]                           Enable pca
+  --top=[INT][REQUIRED]                 Number of ranked lists element
+```
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/lehuutrung1412/ImageRetrieval/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+## Run
 
-### Support or Contact
+### Run with Google Colab or Jupyter Notebook (Recommend with Colab resources)
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+1. Upload ImageRetrieval.ipynb to your Colab
+2. Run all cells and go to address like xyz.ngrok.io to use
+
+### Run with docker
+
+#### Run from remote docker image
+
+Pull lastest image from docker hub and run
+
+```bash
+docker pull lehuutrung1412/image-retrieval
+docker run -d -p 5000:5000 lehuutrung1412/image-retrieval
+```
+
+#### Build and run from source
+
+1. Clone sourcecode
+
+```bash
+git clone https://github.com/lehuutrung1412/ImageRetrieval.git
+```
+
+2. Build docker image and run.
+
+```bash
+docker build -t image-retrieval .
+docker run -d -p 5000:5000 image-retrieval
+```
